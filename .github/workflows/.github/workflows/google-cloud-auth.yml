@@ -1,0 +1,26 @@
+
+name: Workload Identity Federation CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  authenticate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/787013023416/locations/global/workloadIdentityPools/ci-workload-pool/providers/github-ci-provider'
+          service_account: 'ci-deployer@dark-sensor-510902-g1.iam.gserviceaccount.com'
+
+      - name: Confirm authentication
+        run: echo "Google Cloud federated authentication succeeded"
